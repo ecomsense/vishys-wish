@@ -43,7 +43,7 @@ def yml_to_obj(arg=None):
 def win_yml_to_obj(arg=None):
     try:
         if not arg:
-            file = "../../socket-kite.yml"
+            file = "../../wish-vishys.yml"
         else:
             file = S_DATA + arg
 
@@ -88,4 +88,3 @@ def set_logger():
 
 
 logging = set_logger()
-
