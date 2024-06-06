@@ -11,3 +11,4 @@ kiteconnect
 pandas
 pendulum
 pyotp
+playwright
