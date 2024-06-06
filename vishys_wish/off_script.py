@@ -1,7 +1,10 @@
 from playwright.sync_api import Playwright, sync_playwright
 from constants import O_CNFG
+from datetime import datetime
+
 username = O_CNFG["developer"]["username"]
 password = O_CNFG["developer"]["password"]
+url_to_update = O_CNFG["developer"]["existing"]
 
 
 def run(playwright: Playwright, url_to_update) -> None:
@@ -17,17 +20,20 @@ def run(playwright: Playwright, url_to_update) -> None:
     page.get_by_role("button", name="Login").click()
     page.get_by_role("link", name="Quantiply Jaynesh").click()
     page.get_by_label("Redirect URL:").click()
+    page.screenshot(
+        path=f"../data/off_script_{str(datetime.now()).replace(':','_')}.png"
+    )
     page.get_by_label("Redirect URL:").press("Control+a")
     page.get_by_label("Redirect URL:").fill(url_to_update)
-    
+
     page.get_by_role("button", name="Save").click()
-    page.get_by_text("App updated.").click()
+    page.get_by_text(
+        "App updated."
+    ).click()  # https://api.quantiply.tech/brokers/zerodha/redirect/DV8802
 
     context.close()
     browser.close()
 
 
 with sync_playwright() as playwright:
-    url_to_update = "https://api.quantiply.tech/brokers/zerodha/redirect/DV8802"
-    # url_to_update = "http://localhost"
     run(playwright, url_to_update)
