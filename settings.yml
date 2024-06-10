@@ -1,2 +1,6 @@
 show_log: True
 log_level: 10
+
+secret: "google.json"
+gsheet: "pappu_kumar"
+

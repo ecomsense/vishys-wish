@@ -1,5 +1,4 @@
 from constants import logging, O_CNFG, O_FUTL, S_DATA
-import os
 
 
 def get_kite():
@@ -43,7 +42,6 @@ def _get_zerodha():
         from omspy_brokers.zerodha import Zerodha
 
         dct = O_CNFG["zerodha"]
-        tokpath = S_DATA + dct["userid"] + ".txt"
         zera = Zerodha(
             userid=dct["userid"],
             password=dct["password"],
@@ -51,27 +49,35 @@ def _get_zerodha():
             api_key=dct["api_key"],
             secret=dct["secret"],
         )
-        if not O_FUTL.is_file_not_2day(tokpath):
-            with open(tokpath, "r") as tf:
-                enctoken = tf.read()
-                if len(enctoken) > 5:
-                    zera.kite.set_access_token(enctoken)
-                    return zera
-        if zera.authenticate():
-            with open(tokpath, "w") as tw:
-                tw.write(zera.enctoken)
-            return zera
+        return zera
     except Exception as e:
         print(f"exception while creating zerodha object {e}")
 
 
-def remove_token(S_DATA):
-    dct = O_CNFG["bypass"]
-    tokpath = S_DATA + dct["userid"] + ".txt"
-    if O_FUTL.is_file_exists(tokpath):
-        os.remove(tokpath)
+def set_session(zera, userid):
+    try:
+        tokpath = S_DATA + userid + ".txt"
+        with open(tokpath, "r") as tf:
+            enctoken = tf.read()
+            if len(enctoken) > 5:
+                zera.kite.set_access_token(enctoken)
+                return zera
+    except Exception as e:
+        logging.error(f"set_session: {e}")
+
+
+def write_token(zera, userid):
+    try:
+        tokpath = S_DATA + userid + ".txt"
+        if zera.authenticate():
+            with open(tokpath, "w") as tw:
+                tw.write(zera.enctoken)
+    except Exception as e:
+        logging.error(f"write_token: {e}")
 
 
 if __name__ == "__main__":
-    kobj = get_kite()
-    print(kobj.profile)
+    zera = get_kite()
+    write_token(zera, O_CNFG["zerodha"]["userid"])
+    zera = set_session(zera, O_CNFG["zerodha"]["userid"])
+    print(zera.profile)

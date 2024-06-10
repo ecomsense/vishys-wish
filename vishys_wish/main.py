@@ -3,8 +3,8 @@
 
 
 import pygsheets
-from constants import logging
-from login_get_kite import get_kite
+from constants import logging, O_CNFG, O_SETG
+from login import get_kite, set_session
 from traceback import print_exc
 from pprint import pprint
 
@@ -12,11 +12,12 @@ from pprint import pprint
 def get_gsheet():
     try:
         # Load credentials from the JSON key file
-        credentials = "../../wish-vishys.json"
+        credentials = "../../" + O_SETG["google"]
+
         # Authorize the client
         gc = pygsheets.authorize(service_file=credentials)
         # Open the Google Sheet
-        spreadsheet = gc.open("pappu_kumar")
+        spreadsheet = gc.open(O_SETG["gsheet"])
         worksheet = spreadsheet.sheet1
         # Read the data from the Google Sheet
         gdata = worksheet.get_as_df()
@@ -91,6 +92,7 @@ def place(api, df):
 
 def main():
     api = get_kite()
+    api = set_session(api, O_CNFG["zerodha"]["userid"])
     cancel(api)
     gdata = get_gsheet()
     place(api, gdata)
