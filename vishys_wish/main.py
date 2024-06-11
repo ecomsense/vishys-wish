@@ -12,7 +12,7 @@ from pprint import pprint
 def get_gsheet():
     try:
         # Load credentials from the JSON key file
-        credentials = "../../" + O_SETG["google"]
+        credentials = "../../" + O_SETG["secret"]
 
         # Authorize the client
         gc = pygsheets.authorize(service_file=credentials)
