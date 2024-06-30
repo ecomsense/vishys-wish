@@ -36,7 +36,7 @@ def cancel(api):
         __import__("time").sleep(5)
         for gtt in resp:
             if gtt["status"] == "active":
-                logging.debug(f'ancelling {gtt["condition"]["tradingsymbol"]}')
+                logging.debug(f'cancelling {gtt["condition"]["tradingsymbol"]}')
                 resp = api.kite.delete_gtt(gtt["id"])
                 logging.debug(resp)
     except Exception as e:
@@ -87,7 +87,6 @@ def place(api, df):
                     __import__("time").sleep(1)
                 except Exception as e:
                     logging.error(f"place: {e} {exchsym.split(':')[1]}")
-                    print_exc()
 
 
 def main():

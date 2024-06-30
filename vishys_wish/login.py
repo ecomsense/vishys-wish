@@ -78,6 +78,6 @@ def write_token(zera, userid):
 
 if __name__ == "__main__":
     zera = get_kite()
-    write_token(zera, O_CNFG["zerodha"]["userid"])
+    # write_token(zera, O_CNFG["zerodha"]["userid"])
     zera = set_session(zera, O_CNFG["zerodha"]["userid"])
     print(zera.profile)
